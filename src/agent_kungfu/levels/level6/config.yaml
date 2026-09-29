@@ -1,0 +1,6 @@
+schema_version: 1
+level: 6
+name: Graph Engineering Agent
+driver: structure
+implementation: graph_agent.py#run
+stack: [harness, graph-engineering, deepeval]

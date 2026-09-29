@@ -1,0 +1,12 @@
+schema_version: 1
+level: 10
+name: First-Principles Driven Agent
+driver: innovation
+implementation: principles_agent.py#run
+stack: [first-principles, causal-model, ontology, llm-wiki, graph-engineering]
+experiment:
+  demand: [12, 2]
+  copies: [5, 5]
+  unit_cost: 1.0
+  transfer_cost: 0.25
+  purchase_cost: 20.0

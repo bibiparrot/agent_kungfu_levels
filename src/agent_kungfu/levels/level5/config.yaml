@@ -1,0 +1,61 @@
+schema_version: 1
+level: 5
+name: Loop Agent
+driver: ralph-loop-omnigent-codex
+baseline: ../baseline/baseline.yaml
+
+definition:
+  path: omnigent-agent/config.yaml
+  format: omnigent-agent-yaml
+  generation: repeated-codex-subagent-turns
+
+skill:
+  path: ../level4/polars
+  name: polars
+  load: validated-host-bundle
+
+model:
+  interface: ollama-openai-compatible
+  base_url: http://localhost:11434/v1
+  name: ornith-1.5:9b
+  provider: ollama
+
+harness:
+  python_package: omnigent-client
+  minimum_version: "0.11"
+  executor: codex
+  runner_selection: OMNIGENT_RUNNER_ID-or-online-codex
+  timeout_seconds: 600
+  worker_sandbox: codex-read-only-request
+  approval_policy: omnigent-codex-never
+  fail_closed: true
+
+loop:
+  pattern: discover-inspect-calculate-verify-stop
+  table_order: sqlite-catalog-ascending
+  expected_table_count: 16
+  max_iterations: 17
+  retry_budget: 2
+  feedback_transport: sha256-bound-previous-evaluation
+  stop_condition: all-tables-inspected-and-baseline-parity
+  exhaustion_policy: raise-without-delivery
+
+workers:
+  - id: inspect_table
+    name: Codex Sakila Table Explorer
+  - id: calculate_revenue
+    name: Codex Category Revenue Solver
+
+tool:
+  default_n: 5
+  min_n: 1
+  max_n: 16
+
+evaluation:
+  require_canonical_table_order: true
+  require_complete_table_coverage: true
+  require_feedback_digest: true
+  compare_with_baseline: true
+  expected_joined_rows: 16044
+  expected_category_rows: 16
+  fail_closed: true

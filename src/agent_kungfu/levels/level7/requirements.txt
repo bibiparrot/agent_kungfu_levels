@@ -1,0 +1,12 @@
+# Level 7 - Knowledge Driven Agent
+# Python >=3.12. Install from the repository root.
+connectorx>=0.4.5
+deepeval>=4.2
+jinja2>=3.1
+litellm>=1.80
+marimo>=0.24,<1
+networkx>=3.4
+polars>=1.35
+pydantic>=2.10
+PyYAML>=6.0
+rdflib>=7.0

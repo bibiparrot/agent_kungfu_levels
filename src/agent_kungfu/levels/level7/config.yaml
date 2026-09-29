@@ -1,0 +1,6 @@
+schema_version: 1
+level: 7
+name: Knowledge Driven Agent
+driver: knowledge
+implementation: knowledge_agent.py#run
+stack: [llm-wiki, graph-engineering, ralph-loop, deepeval]

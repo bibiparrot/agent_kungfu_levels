@@ -1,0 +1,42 @@
+spec_version: 1
+name: sakila-level5-loop
+description: >-
+  A Codex-backed OmniGenT agent that advances exactly one typed Ralph-loop action per
+  request: inspect the next Sakila table or calculate category revenue after full coverage.
+
+skills: [polars]
+
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: auto
+    read_paths: ["."]
+    write_paths: []
+    write_files: []
+    allow_network: false
+  start_in_scratch: true
+
+executor:
+  type: omnigent
+  timeout: 120
+  max_iterations: 3
+  model: ornith-1.5:9b
+  auth:
+    type: api_key
+    api_key: ollama
+    base_url: http://localhost:11434/v1
+  config:
+    harness: codex
+
+prompt: |
+  You are the Level 5 Ralph-loop control-plane agent. The host owns SQLite, Polars,
+  progress state, evaluation, and stopping. On each request, call exactly the requested
+  bundled subagent once. Return only the typed JSON action requested by the host. Preserve
+  the supplied table, Top-N, feedback digest, and skill digest exactly. Never execute database actions,
+  invent evidence, skip a table, or declare the loop complete yourself.
+
+tools:
+  agents: [inspect_table, calculate_revenue]
+
+async: false

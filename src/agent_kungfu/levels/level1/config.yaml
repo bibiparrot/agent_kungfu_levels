@@ -1,0 +1,36 @@
+schema_version: 1
+level: 1
+name: Prompt Agent
+driver: prompt-and-workflow
+baseline: ../baseline/baseline.yaml
+
+workflow:
+  steps:
+    - read_tables
+    - merge_tables
+    - calculate_revenue
+  tables:
+    category: SELECT * FROM category
+    film_category: SELECT * FROM film_category
+    inventory: SELECT * FROM inventory
+    rental: SELECT * FROM rental
+    payment: SELECT * FROM payment
+  joins:
+    - category.category_id = film_category.category_id
+    - film_category.film_id = inventory.film_id
+    - inventory.inventory_id = rental.inventory_id
+    - rental.rental_id = payment.rental_id
+  aggregation: GROUP BY category.name; SUM(payment.amount) AS revenue
+
+llm:
+  interface: openai-compatible
+  base_url: http://localhost:11434/v1
+  model: ornith-1.5:9b
+  client: litellm
+  prompt: prompt.j2
+
+tool:
+  name: top_n_categories
+  default_n: 5
+  min_n: 1
+  max_n: 16

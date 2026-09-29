@@ -1,0 +1,30 @@
+spec_version: 1
+name: calculate_revenue
+description: Propose category-revenue calculation only after every Sakila table is covered.
+skills: [polars]
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: auto
+    read_paths: ["."]
+    write_paths: []
+    write_files: []
+    allow_network: false
+  start_in_scratch: true
+executor:
+  type: omnigent
+  timeout: 120
+  max_iterations: 2
+  model: ornith-1.5:9b
+  auth:
+    type: api_key
+    api_key: ollama
+    base_url: http://localhost:11434/v1
+  config:
+    harness: codex
+prompt: |
+  Load the bundled Polars skill before reasoning. Propose only calculate_revenue with table
+  null and the exact requested N. Echo FEEDBACK_DIGEST and SKILL_DIGEST unchanged. Do not execute code, query
+  SQLite, fabricate revenue rows, or claim baseline parity. Return compact JSON to the root.
+async: false

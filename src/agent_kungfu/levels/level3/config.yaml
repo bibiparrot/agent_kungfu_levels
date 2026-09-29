@@ -1,0 +1,34 @@
+schema_version: 1
+level: 3
+name: Protocol Agent
+driver: agent-md-and-protocols
+baseline: ../baseline/baseline.yaml
+
+definition:
+  path: agent.md
+  format: yaml-frontmatter-markdown
+  generation: dynamic
+
+protocols:
+  delegation: a2a
+  data_result: mcp
+
+model:
+  interface: codex-app-server-jsonrpc
+  base_url: http://localhost:11434/v1
+  name: ornith-1.5:9b
+  provider: ollama
+
+codex:
+  python_package: openai-codex
+  sandbox: read-only
+  approval_mode: deny_all
+  ephemeral_threads: true
+  output: json-action-validated-by-pydantic
+  reasoning_effort: none
+  turn_timeout_seconds: 240
+
+tool:
+  default_n: 5
+  min_n: 1
+  max_n: 16

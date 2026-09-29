@@ -1,0 +1,20 @@
+schema_version: 1
+name: sakila-category-revenue-baseline
+
+# Paths are resolved relative to this YAML file. On this project checkout they
+# resolve to the two absolute paths shown below.
+database:
+  path: ../../../../data/sakila.db
+  resolved_path: D:/Python/agent_kungfu_levels/data/sakila.db
+  uri: sqlite:///D:/Python/agent_kungfu_levels/data/sakila.db
+  reader: polars.read_database_uri
+  engine: connectorx
+
+sql:
+  revenue: revenue.sql
+  resolved_path: D:/Python/agent_kungfu_levels/src/agent_kungfu/levels/baseline/revenue.sql
+
+expected:
+  category_rows: 16
+  joined_payment_rows: 16044
+  total_revenue: 67406.56

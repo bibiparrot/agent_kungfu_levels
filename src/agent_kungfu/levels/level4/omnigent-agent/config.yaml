@@ -1,0 +1,42 @@
+spec_version: 1
+name: sakila-level4-harness
+description: >-
+  A Codex-backed OmniGenT harness that delegates one constrained read action and one
+  constrained calculation action, then evaluates the proposed action plan.
+
+skills: [polars]
+
+# The root needs a writable scratch directory for delegated tool calls, while
+# the uploaded bundle remains read-only.  `auto` selects the platform sandbox.
+os_env:
+  type: caller_process
+  cwd: .
+  sandbox:
+    type: auto
+    read_paths: ["."]
+    write_paths: []
+    write_files: []
+    allow_network: false
+  start_in_scratch: true
+
+executor:
+  type: omnigent
+  model: ornith-1.5:9b
+  auth:
+    type: api_key
+    api_key: ollama
+    base_url: http://localhost:11434/v1
+  config:
+    harness: codex
+
+prompt: |
+  You are the Level 4 Sakila control-plane harness. The host owns the database and is the
+  only component allowed to execute actions. You must delegate once to read_tables and then
+  once to calculate_revenue. Both are Codex subagents with the bundled Polars skill. Evaluate
+  whether their proposed actions match the requested Top-N and skill digest. Return only the
+  JSON object requested by the user; never wrap it in Markdown and never invent data rows.
+
+tools:
+  agents: [read_tables, calculate_revenue]
+
+async: false

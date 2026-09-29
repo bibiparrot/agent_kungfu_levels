@@ -1,0 +1,6 @@
+schema_version: 1
+level: 8
+name: Ontology Driven Agent
+driver: semantics
+implementation: ontology_agent.py#run
+stack: [ontology, llm-wiki, graph-engineering, deepeval]

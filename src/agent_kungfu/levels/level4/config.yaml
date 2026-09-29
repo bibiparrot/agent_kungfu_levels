@@ -1,0 +1,52 @@
+schema_version: 1
+level: 4
+name: Harness Agent
+driver: omnigent-codex-harness
+baseline: ../baseline/baseline.yaml
+
+definition:
+  path: omnigent-agent/config.yaml
+  format: omnigent-agent-yaml
+  generation: two-bundled-codex-subagents
+
+skill:
+  path: polars
+  name: polars
+  load: validated-host-bundle
+
+model:
+  interface: ollama-openai-compatible
+  base_url: http://localhost:11434/v1
+  name: ornith-1.5:9b
+  provider: ollama
+
+harness:
+  python_package: omnigent-client
+  minimum_version: "0.11"
+  executor: codex
+  worker_sandbox: codex-read-only-request
+  sandbox_declaration: omnigent-os-env-auto
+  sandbox_write_paths: []
+  sandbox_write_files: []
+  sandbox_allow_network: false
+  sandbox_start_in_scratch: true
+  approval_policy: omnigent-codex-never
+  session_scope: omnigent-session
+  runner_selection: OMNIGENT_RUNNER_ID-or-online-codex
+  timeout_seconds: 600
+
+workers:
+  - id: read_tables
+    name: Polars Table Reader
+  - id: calculate_revenue
+    name: Polars Revenue Calculator
+
+tool:
+  default_n: 5
+  min_n: 1
+  max_n: 16
+
+evaluation:
+  require_exact_worker_order: true
+  compare_with_baseline: true
+  fail_closed: true

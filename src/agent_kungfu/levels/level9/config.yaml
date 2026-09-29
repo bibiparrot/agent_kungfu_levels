@@ -1,0 +1,10 @@
+schema_version: 1
+level: 9
+name: Causal Driven Agent
+driver: causality
+implementation: causal_agent.py#run
+stack: [causal-model, ontology, llm-wiki, graph-engineering]
+experiment:
+  seed: 42
+  samples: 4000
+  known_effect: 2.0
